@@ -10,8 +10,8 @@ class TurtleControlNode : public rclcpp::Node
 private:
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;//发布者的智能指针
   rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr subscription_;//订阅者的智能指针
-  double target_x_ = {5.0}; // 目标位置的x坐标
-  double target_y_ = {5.0}; // 目标位置的y坐标
+  double target_x_ = {15.0}; // 目标位置的x坐标
+  double target_y_ = {15.0}; // 目标位置的y坐标
   double k_ = {1.0}; // 比例增益
   double max_line_speed_ = {1.0}; // 最大线速度
   double max_angular_speed_ = {1.0}; // 最大角速度
@@ -40,6 +40,9 @@ public:
         auto distance = std::sqrt(std::pow(target_x_ - current_x, 2) + std::pow(target_y_ - current_y, 2));
         RCLCPP_INFO(this->get_logger(), "当前位置与目标位置之间的误差: %.2f", distance);
         auto angle = std::atan2(target_y_ - current_y, target_x_ - current_x) - pose->theta;
+        // 将角度误差规范化到 [-pi, pi]，避免绕远路
+        while (angle > M_PI) { angle -= 2 * M_PI; }
+        while (angle < -M_PI) { angle += 2 * M_PI; }
         RCLCPP_INFO(this->get_logger(), "当前位置与目标位置之间的角度误差: %.2f", angle);
         //3.控制策略
         auto msg = geometry_msgs::msg::Twist();
@@ -47,10 +50,13 @@ public:
         {
             if (fabs(angle) > 0.2)
             {
-                msg.angular.z = fabs(angle);
+                // 角度误差大时，先转向目标方向（带符号，区分左右）
+                msg.angular.z = angle;
             }else
             {
-                msg.angular.z = k_*distance;
+                // 角度对准后，边转边向目标前进
+                msg.angular.z = k_ * angle;
+                msg.linear.x = k_ * distance;
             }
         }
         //4.限制线速度和角速度
@@ -61,6 +67,10 @@ public:
         if (msg.angular.z > max_angular_speed_)
         {
             msg.angular.z = max_angular_speed_;
+        }
+        if (msg.angular.z < -max_angular_speed_)
+        {
+            msg.angular.z = -max_angular_speed_;
         }
         //5.发布控制指令
         publisher_->publish(msg);
