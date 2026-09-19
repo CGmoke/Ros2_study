@@ -3,13 +3,15 @@ build/
 install/
 log/
 
-
 #Python相关
 *.pyc
 __pycache__/
 *.pyo
 *.pyd
 *.egg-info/
+
+#虚拟环境
+.venv/
 
 #CPP相关
 *.o
