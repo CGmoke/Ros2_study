@@ -12,6 +12,8 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/FaceDetector.srv"
+  "srv/Partrol.srv"
+
   DEPENDENCIES sensor_msgs
 )
 

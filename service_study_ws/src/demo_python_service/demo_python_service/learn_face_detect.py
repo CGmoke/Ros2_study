@@ -10,7 +10,7 @@ def main():
     #是用cv2加载图片
     image = cv2.imread(default_image_path)
     #检测人脸
-    face_recognitions = face_recognition.face_locations(image,number_of_times_to_upsample=1,model='hog')
+    face_recognitions = face_recognition.face_locations(image,number_of_times_to_upsample=self.number_of_times_to_upsample,model=self.model)
     #绘制人脸框
     for top,right,bottom,left in face_recognitions:
         cv2.rectangle(image,(left,top),(right,bottom),(255,0,0),4)
