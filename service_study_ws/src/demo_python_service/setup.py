@@ -1,5 +1,5 @@
 from setuptools import find_packages, setup
-
+from glob import glob
 package_name = 'demo_python_service'
 
 setup(
@@ -11,6 +11,7 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name+"/resource", ['resource/image.png','resource/imagecopy.png']),
+        ('share/' + package_name + '/launch', glob('launch/*.launch.py')),
 
     ],
     install_requires=['setuptools'],
@@ -29,6 +30,8 @@ setup(
             'learn_face_detect = demo_python_service.learn_face_detect:main',
             'face_detect_node = demo_python_service.face_detect_node:main',
             'face_detect_client_node = demo_python_service.face_detect_client_node:main',
+            'turtle_control = demo_python_service.turtle_control:main',
+            'partol_client = demo_python_service.partol_client:main',
         ],
     },
 )
