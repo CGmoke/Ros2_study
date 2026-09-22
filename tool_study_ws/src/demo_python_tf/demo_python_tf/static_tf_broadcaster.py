@@ -18,7 +18,7 @@ class StaticTFBroadcaster(Node):
         """
         transform = TransformStamped()
         transform.header.frame_id = 'base_link'
-        transform.child_frame_id = 'camer_link'
+        transform.child_frame_id = 'camera_link'
         transform.header.stamp = self.get_clock().now().to_msg()
 
         transform.transform.translation.x = 0.5

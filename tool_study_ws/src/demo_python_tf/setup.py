@@ -1,5 +1,5 @@
 from setuptools import find_packages, setup
-
+from glob import glob
 package_name = 'demo_python_tf'
 
 setup(
@@ -10,6 +10,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name+'/launch', glob('launch/*.launch.py')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -26,7 +27,9 @@ setup(
     entry_points={
         'console_scripts': [
         "static_tf_broadcaster=demo_python_tf.static_tf_broadcaster:main",
-        "dynamic_tf_broadcaster=demo_python_tf.dynamic_tf_broadcaster:main"
+        "dynamic_tf_broadcaster=demo_python_tf.dynamic_tf_broadcaster:main",
+        "tf_listener=demo_python_tf.tf_listener:main",
+
         ],
     },
 )

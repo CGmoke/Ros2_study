@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from tf2_ros import TransformBroadcaster #静态坐标发布器
+from tf2_ros import TransformBroadcaster #坐标发布器
 from geometry_msgs.msg import TransformStamped #消息接口
 from tf_transformations import quaternion_from_euler #欧拉角转四元数函数
 import math #角度转弧度函数
