@@ -43,19 +43,7 @@ class TFListener:public rclcpp::Node
         }   
         
     }
-    // geometry_msgs::msg::TransformStamped transform;
-    //     transform.header.stamp = this->get_clock()->now();
-    //     transform.header.frame_id = "map";
-    //     transform.child_frame_id = "base_link";
-    //     transform.transform.translation.x = 5.0;
-    //     transform.transform.translation.y = 3.0;
-    //     transform.transform.translation.z = 0.0;
-    //     tf2::Quaternion q;
-    //     q.setRPY(0.0,0.0,60*M_PI/180.0);
-    //     transform.transform.rotation = tf2::toMsg(q); 
-    //     this->listener_->sendTransform(transform);
-};
-
+}
 int main(int argc,char* argv[])
 {
     rclcpp::init(argc,argv);
