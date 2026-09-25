@@ -68,5 +68,11 @@
             <child link="${caster_name}_link" />
             <origin xyz="${xyz}" rpy="0.0 0.0 0.0" />
         </joint>
+        <gazebo reference="${wheel_name}_link">
+            <mu1 value="20.0"/>
+            <mu2 value="20.0"/>
+            <kp value="1000000000.0"/>
+            <kd value="20.0"/>
+        </gazebo>
     </xacro:macro>
 </robot>
