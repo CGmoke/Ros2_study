@@ -33,9 +33,16 @@ def generate_launch_description():
         ),
         launch_arguments=[("world", default_gazebo_world_path), ("verbose", "true")],
     )
+    action_spawn_entity = launch_ros.actions.Node(
+        package="gazebo_ros",
+        executable="spawn_entity.py",
+        arguments=["-topic", "/robot_description", "-entity", "fishbot"],
+        output="screen",
+    )
     return launch.LaunchDescription([
         action_declare_arg_mode_path,
         action_robot_state_publisher,
         action_launch_gazebo,
+        action_spawn_entity,
 
     ])
