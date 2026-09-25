@@ -1,17 +1,13 @@
-import joint_state_publisher
 import launch
 import launch_ros
 from ament_index_python.packages import get_package_share_directory
-from launch.actions import DeclareLaunchArgument
 from launch_ros.parameter_descriptions import ParameterValue
-from launch_ros.actions import Node
-from launch.substitutions import LaunchConfiguration, Command
 import os 
 
 def generate_launch_description():
     #获取固定的urdf文件路径
     urdf_package_path = get_package_share_directory("fishbot_description")
-    default_urdf_path = os.path.join(urdf_package_path, "urdf", "first_robot.urdf")
+    default_urdf_path = os.path.join(urdf_package_path, "urdf", "fishbot", "fishbot.urdf.xacro")
     default_rviz_config_path = os.path.join(urdf_package_path, "config", "display_robot_model.rviz")
        #声明一个urdf目录的参数，方便修改
     action_declare_arg_mode_path = launch.actions.DeclareLaunchArgument(
@@ -20,7 +16,7 @@ def generate_launch_description():
         description="加载的模型文件路径",
     )
     #通过文件路径，获取内部内容，并转换成参数值对象，以供传入 robot_state_publisher 节点
-    substitutions_command_result  = launch.substitutions.Command(["cat ", launch.substitutions.LaunchConfiguration("model")])
+    substitutions_command_result  = launch.substitutions.Command(["xacro ", launch.substitutions.LaunchConfiguration("model")])
     robot_description_value = ParameterValue(substitutions_command_result, value_type=str)
     
     action_robot_state_publisher = launch_ros.actions.Node(
