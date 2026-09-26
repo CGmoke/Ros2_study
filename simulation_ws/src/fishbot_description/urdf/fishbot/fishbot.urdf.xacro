@@ -22,4 +22,5 @@
     <xacro:caster_xacro  caster_name="front_caster" xyz="0.08 0.0 -0.076" />
     <xacro:caster_xacro  caster_name="back_wheel"  xyz="-0.08 0.0 -0.076" />
     <xacro:gazebo_control_plugin />
+    <xacro:gazebo_sensor_plugin />
 </robot>
