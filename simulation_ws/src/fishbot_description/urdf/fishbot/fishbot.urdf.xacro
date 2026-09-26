@@ -12,6 +12,8 @@
     <!-- 插件部分 -->
     <xacro:include filename="$(find fishbot_description)/urdf/fishbot/plugins/gazebo_control_plugin.xacro"/>
     <xacro:include filename="$(find fishbot_description)/urdf/fishbot/plugins/gazebo_sensor_plugin.xacro"/>
+    <!-- 控制器部分 -->
+    <xacro:include filename="$(find fishbot_description)/urdf/fishbot/fishbot.ros2_control.xacro"/>
     <!-- 机器人部分 --> 
     <xacro:base_xacro length="0.12" radius="0.10" />
     <xacro:imu_xacro xyz ="0.0 0.0 0.02" />
@@ -21,6 +23,10 @@
     <xacro:wheel_xacro  wheel_name="right_wheel" xyz="0 -0.10 -0.06" />
     <xacro:caster_xacro  caster_name="front_caster" xyz="0.08 0.0 -0.076" />
     <xacro:caster_xacro  caster_name="back_wheel"  xyz="-0.08 0.0 -0.076" />
-    <xacro:gazebo_control_plugin />
+    <!-- 不要再启用：该插件直接在 Gazebo 里给轮关节设速度，会把轮子锁在 0 速，
+         与 ros2_control（effort / diff_drive 控制器）冲突。二选一，此处保留 ros2_control。 -->
+    <!-- <xacro:gazebo_control_plugin /> -->
     <xacro:gazebo_sensor_plugin />
+    <!-- 控制器部分 -->
+    <xacro:fishbot_ros2_control />
 </robot>
