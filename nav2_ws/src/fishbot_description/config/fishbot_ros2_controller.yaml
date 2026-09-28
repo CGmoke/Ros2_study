@@ -33,7 +33,9 @@ fishbot_diff_drive_controller:
     #wheels_per_side: 1  # actually 2, but both are controlled by 1 signal
     wheel_radius: 0.032
 
-    wheel_separation_multiplier: 1.0
+    # Gazebo 圆柱轮碰撞的有效轮距实测为 0.24m（=轮距0.20+轮宽0.04），
+    # 用 1.2 标定系数使里程计偏航与真值一致，消除建图旋转漂移
+    wheel_separation_multiplier: 1.2
     left_wheel_radius_multiplier: 1.0
     right_wheel_radius_multiplier: 1.0
 
