@@ -1,46 +1,42 @@
 import launch
 import launch_ros
 from ament_index_python.packages import get_package_share_directory
-from launch_ros.parameter_descriptions import ParameterValue
-import os 
+
 
 def generate_launch_description():
-    #获取固定的urdf文件路径
-    urdf_package_path = get_package_share_directory("fishbot_description")
-    default_urdf_path = os.path.join(urdf_package_path, "urdf", "fishbot", "fishbot.urdf.xacro")
-    default_rviz_config_path = os.path.join(urdf_package_path, "config", "display_robot_model.rviz")
-       #声明一个urdf目录的参数，方便修改
+    # 获取默认路径
+    urdf_tutorial_path = get_package_share_directory('fishbot_description')
+    default_model_path = urdf_tutorial_path + '/urdf/first_robot.urdf'
+    default_rviz_config_path = urdf_tutorial_path + '/config/rviz/display_model.rviz'
+    # 为 Launch 声明参数
     action_declare_arg_mode_path = launch.actions.DeclareLaunchArgument(
-        name = "model",
-        default_value=str(default_urdf_path),
-        description="加载的模型文件路径",
+        name='model', default_value=str(default_model_path),
+        description='URDF 的绝对路径')
+    # 获取文件内容生成新的参数
+    robot_description = launch_ros.parameter_descriptions.ParameterValue(
+        launch.substitutions.Command(
+            ['xacro ', launch.substitutions.LaunchConfiguration('model')]),
+        value_type=str)
+    # 状态发布节点
+    robot_state_publisher_node = launch_ros.actions.Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        parameters=[{'robot_description': robot_description}]
     )
-    #通过文件路径，获取内部内容，并转换成参数值对象，以供传入 robot_state_publisher 节点
-    substitutions_command_result  = launch.substitutions.Command(["xacro ", launch.substitutions.LaunchConfiguration("model")])
-    robot_description_value = ParameterValue(substitutions_command_result, value_type=str)
-    
-    action_robot_state_publisher = launch_ros.actions.Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        parameters=[{"robot_description": robot_description_value}],
-        name="robot_state_publisher",
-        output="screen",
+    # 关节状态发布节点
+    joint_state_publisher_node = launch_ros.actions.Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
     )
-
-    action_joint_state_publisher = launch_ros.actions.Node(
-        package="joint_state_publisher",
-        executable="joint_state_publisher",
-        name="joint_state_publisher",
-        output="screen",
-    )
-    action_rviz_node = launch_ros.actions.Node(
-        package="rviz2",
-        executable="rviz2",
-        arguments=["-d", default_rviz_config_path],
+    # RViz 节点
+    rviz_node = launch_ros.actions.Node(
+        package='rviz2',
+        executable='rviz2',
+        arguments=['-d', default_rviz_config_path]
     )
     return launch.LaunchDescription([
         action_declare_arg_mode_path,
-        action_robot_state_publisher,
-        action_joint_state_publisher,
-        action_rviz_node,
+        joint_state_publisher_node,
+        robot_state_publisher_node,
+        rviz_node
     ])
