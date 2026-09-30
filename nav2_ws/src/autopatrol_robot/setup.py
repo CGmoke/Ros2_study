@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'autopartol_robot'
+package_name = 'autopatrol_robot'
 
 setup(
     name=package_name,
