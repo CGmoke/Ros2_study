@@ -9,6 +9,7 @@ from autopatrol_interfaces.srv import SpeachText
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import cv2  
+import os 
 
 class PatrolNode(BasicNavigator):
     def __init__(self, node_name='patrol_node'):
@@ -30,6 +31,7 @@ class PatrolNode(BasicNavigator):
         self.latest_image = None
         self.subscription_image = self.create_subscription(
             Image, '/camera_sensor/image_raw', self.image_callback, 10)
+        
 
     def image_callback(self, msg):
         """
@@ -39,12 +41,18 @@ class PatrolNode(BasicNavigator):
 
     def record_image(self):
         """
-        记录图像
+        记录图像到 image_save_path 目录
         """
         if self.latest_image is not None:
           pose = self.get_current_pose()
           cv_image = self.bridge.imgmsg_to_cv2(self.latest_image)
-          cv2.imwrite(f'{self.image_save_path}image_{pose.translation.x:3.2f}_{pose.translation.y:3.2f}.png', cv_image)
+          file_path = os.path.join(
+              self.image_save_path,
+              f'image_{pose.translation.x:.2f}_{pose.translation.y:.2f}.png')
+          if cv2.imwrite(file_path, cv_image):
+              self.get_logger().info(f'图像已保存: {file_path}')
+          else:
+              self.get_logger().error(f'图像保存失败: {file_path}')
 
 
     def speach_text(self, text):

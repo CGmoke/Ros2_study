@@ -1,5 +1,6 @@
 patrol_node:
   ros__parameters:
+    image_save_path: 'images'
     initial_point: [0.0, 0.0, 0.0]
     target_points: [
       0.0,0.0,0.0,
