@@ -1,0 +1,13 @@
+# 项目级 clangd 配置
+# Trae 的 clangd 扩展未透传 --query-driver，导致无法从编译命令里的 /usr/bin/c++
+# 提取系统标准库头文件路径（表现为 'iostream' file not found 等幻错）。
+# 这里显式补上本机 g++ 的系统 include 目录（g++ -E -v -x c++ 实测结果）。
+CompileFlags:
+  Add:
+    - -isystem/usr/include/c++/11
+    - -isystem/usr/include/x86_64-linux-gnu/c++/11
+    - -isystem/usr/include/c++/11/backward
+    - -isystem/usr/lib/gcc/x86_64-linux-gnu/11/include
+    - -isystem/usr/local/include
+    - -isystem/usr/include/x86_64-linux-gnu
+    - -isystem/usr/include
